@@ -30,9 +30,11 @@ X = [ones(m, 1) X];
 %       for each row.
 %       
 
+probabilities = sigmoid( X * all_theta' );
 
-
-
+for j=1:m
+    p(j) = min( find( probabilities(j,:) == max(probabilities(j,:)) ) );
+end
 
 
 
