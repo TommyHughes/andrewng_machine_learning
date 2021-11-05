@@ -62,23 +62,16 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+h_theta = sigmoid([ones(m,1), sigmoid([ones(m,1),X] * Theta1')] * Theta2');
 
+y_matrix = zeros(m,num_labels);
+for i=1:m
+    y_matrix(i,y(i)) = 1;
+end
 
+inner_summands = ( -y_matrix .* log(h_theta) ) - ( (1-y_matrix) .* log(1-h_theta) );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+J = ( (1/m) * sum(sum(inner_summands')) ) + ( (lambda/(2*m)) * ( sum(sum(Theta1(:,2:input_layer_size+1) .^ 2)) + sum(sum(Theta2(:,2:hidden_layer_size+1) .^ 2)) ) );
 
 % -------------------------------------------------------------
 
