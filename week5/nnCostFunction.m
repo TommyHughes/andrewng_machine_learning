@@ -62,6 +62,7 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% Compute the cost function J
 h_theta = sigmoid([ones(m,1), sigmoid([ones(m,1),X] * Theta1')] * Theta2');
 
 y_matrix = zeros(m,num_labels);
@@ -73,12 +74,40 @@ inner_summands = ( -y_matrix .* log(h_theta) ) - ( (1-y_matrix) .* log(1-h_theta
 
 J = ( (1/m) * sum(sum(inner_summands')) ) + ( (lambda/(2*m)) * ( sum(sum(Theta1(:,2:input_layer_size+1) .^ 2)) + sum(sum(Theta2(:,2:hidden_layer_size+1) .^ 2)) ) );
 
+% Compute the gradient grad
+Theta1_grad = zeros(size(Theta1));
+Theta2_grad = zeros(size(Theta2));
+for t=1:m
+    % 1. Compute the activations for the t^th training example
+    a1 = [1,X(t,:)];
+    z2 = a1 * Theta1';
+    a2 = [1,sigmoid(z2)];
+    z3 = a2 * Theta2';
+    a3 = sigmoid(z3);
+
+    % 2. Compute delta3
+    delta3 = a3 - y_matrix(t,:);
+
+    % 3. Compute delta2
+    delta2 = (delta3 * Theta2) .* sigmoidGradient([1,z2]);
+    delta2 = delta2(2:end);
+
+    % 4. Accumulate gradients
+    Theta1_grad = Theta1_grad + (delta2' * a1);
+    Theta2_grad = Theta2_grad + (delta3' * a2);
+
+    %Delta = Delta + [delta2(2:end),delta(3)]
+endfor 
+
+% 5. Obtain unregularized Gradient
+Theta1_grad = (Theta1_grad ./ m) + (lambda/m) * [zeros(size(Theta1,1),1) Theta1(:,2:end)];
+Theta2_grad = (Theta2_grad ./ m) + (lambda/m) * [zeros(size(Theta2,1),1) Theta2(:,2:end)];
+
 % -------------------------------------------------------------
 
 % =========================================================================
 
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
-
 
 end
