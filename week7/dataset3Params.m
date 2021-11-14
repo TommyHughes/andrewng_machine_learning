@@ -24,7 +24,27 @@ sigma = 0.3;
 %
 
 
+testValues = [0.01,0.03,0.1,0.3,1,3,10,30];
 
+model = svmTrain(X, y, 0.01, @(x1, x2) gaussianKernel(x1, x2, 0.01));
+predictions = svmPredict(model, Xval);
+err = mean(double(predictions ~= yval));
+
+C = 0.01;
+sigma = 0.01;
+
+for cTest = testValues
+    for sigmaTest = testValues
+        model = svmTrain(X, y, cTest, @(x1, x2) gaussianKernel(x1, x2, sigmaTest));
+        predictions = svmPredict(model, Xval);
+        testErr = mean(double(predictions ~= yval));
+        if (testErr < err)
+            err = testErr;
+            C = cTest;
+            sigma = sigmaTest;
+        endif
+    end
+end
 
 
 
