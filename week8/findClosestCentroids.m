@@ -21,12 +21,18 @@ idx = zeros(size(X,1), 1);
 % Note: You can use a for-loop over the examples to compute this.
 %
 
-
-
-
-
-
-
+m = size(X,1);
+for iindex=1:m
+    sq_norm = sum( ( X(iindex,:) - centroids(1,:) ) .^ 2 );
+    idx(iindex) = 1;
+    for jindex=2:K
+        temp = sum( ( X(iindex,:) - centroids(jindex,:) ) .^ 2 );
+        if (temp < sq_norm)
+            sq_norm = temp;
+            idx(iindex) = jindex;
+        endif
+    endfor
+endfor
 % =============================================================
 
 end
