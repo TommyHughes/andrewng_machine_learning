@@ -24,7 +24,10 @@ sigma2 = zeros(n, 1);
 
 
 
-
+for j=1:n
+    mu(j) = mean( X(:,j) );
+    sigma2(j) = (1/m) * sum( ( X(:,j) - mu(j) ) .^ 2 );
+endfor
 
 
 
